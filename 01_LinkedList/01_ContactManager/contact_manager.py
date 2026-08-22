@@ -118,5 +118,20 @@ class ContactManager:
         if i == 0:
             print("No Favourite Contacts found.")
 
+    def filter_occupation(self, occupation):
+        current = self.head
+        i = 0
+        print(f"------{occupation}-------")
+        while current is not None:
+            if current.occupation.lower() == occupation.lower():
+                i += 1
+                fav = "FAV" if current.is_fav else ""
+                print(f"\n {i}. Name : {current.name} | Phone : {current.phone} | Email : {current.email} | Occupation : {current.occupation} | {fav}")
+
+            current = current.next
+        if i == 0:
+            print(f"No {occupation} found in Contact List.")
+
+
 
     

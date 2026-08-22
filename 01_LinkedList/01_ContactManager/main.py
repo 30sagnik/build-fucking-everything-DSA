@@ -13,9 +13,10 @@ while True:
     print("5. Delete Contact")
     print("6. Toggle Favourite")
     print("7. Display Favourites")
-    print("8. Exit")
+    print("8. Filter Occupation")
+    print("9. Exit")
 
-    choice = input("Enter your Choice[1-8]: ")
+    choice = input("Enter your Choice[1-9]: ")
 
     if choice == "1":
         name = input("Name: ")
@@ -36,10 +37,10 @@ while True:
 
     elif choice == "4":
         search = input("Enter Contact to Update: ")
-        name = input("New Name: ")
-        phone = input("New Phone No.: ")
-        email = input("New Email: ")
-        occupation = input("New Occupation: ")
+        name = input("New Name: ") or None
+        phone = input("New Phone No.: ") or None
+        email = input("New Email: ") or None
+        occupation = input("New Occupation: ") or None
         manager.update_contact(search, name, phone, email, occupation)
 
         save_contacts(manager)
@@ -60,6 +61,10 @@ while True:
         manager.display_fav()
 
     elif choice == "8":
+        occupation = input("Enter Occupation you want to look for: ")
+        manager.filter_occupation(occupation)
+
+    elif choice == "9":
         print("-----------------THANK YOU-----------------")
         break
 
