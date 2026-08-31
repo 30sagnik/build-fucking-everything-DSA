@@ -6,8 +6,13 @@ __pycache__/
 .venv/
 venv/
 
+#LL_01_ContactManager
 #Local Contact Data
 contacts.json
 
 #test folders
 Test/
+
+#LL_02_MusicPlayer
+library.json
+playlists.json
