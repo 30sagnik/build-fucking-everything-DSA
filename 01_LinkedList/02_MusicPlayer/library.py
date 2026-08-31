@@ -1,9 +1,51 @@
+import json
 from music import Music
 
 class Library:
     def __init__(self):
         self.tracks = {}
-        self.next_ID = 1000
+        self.next_ID = 1000  #Starting from empty
+
+        self.load_library()
+        if self.tracks: #Continuing the Library
+            self.next_ID = max(self.tracks.keys()) +1
+
+    #Load tracks from JSON
+    def load_library(self):
+        try:
+            with open("library.json", "r") as file:
+                data = json.load(file)
+
+            for track_id, track in data.items():
+                music = Music(
+                    track["Id"],
+                    track["Title"],
+                    track["Artist"],
+                    track["Genre"],
+                    track["Duration"],
+                    track["FilePath"]
+                )
+
+                self.tracks[int(track_id)] = music
+        except FileNotFoundError:
+            print("Library file not found. Starting with an empty file.")
+
+    #Save tracks in JSON
+    def save_library(self):
+        data = {}
+
+        for track_id, track in self.tracks.items():
+            data[track_id] = {
+                "Id": track.Id,
+                "Title": track.Title,
+                "Artist": track.Artist,
+                "Genre": track.Genre,
+                "Duration": track.Duration,
+                "FilePath": track.FilePath
+            }
+
+        with open("library.json", "w") as file:
+            json.dump(data, file, indent=4)
 
     #Add Music track to library
     def add_track(self):
@@ -34,6 +76,8 @@ class Library:
 
         self.tracks[track_id] = music
         self.next_ID += 1
+
+        self.save_library()
 
         print("\nSong added successfully")
         print("ID: ", music.Id)
@@ -69,6 +113,7 @@ class Library:
         track = self.get_track(track_id)
 
         del self.tracks[track_id]
+        self.save_library()
         print(f"Removed: {track.Title} - {track.Artist}")
         return True
 
@@ -119,9 +164,4 @@ if __name__ == "__main__":
     library.remove_track()
 
     library.display_library()
-
-    
-
-
-
-
+   
