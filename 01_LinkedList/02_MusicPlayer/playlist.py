@@ -1,7 +1,8 @@
 from music_node import MusicNode
 
 class Playlist:
-    def __init__(self):
+    def __init__(self, playlistname):
+        self.playlistname = playlistname
         self.head = None
         self.tail = None
         self.current = None
@@ -25,20 +26,20 @@ class Playlist:
 
         self.size += 1
 
-    def remove_music(self, music):
+    def remove_music(self, track_id):
         #Empty LinkedList
         if self.head is None:
-            print("Playlist is Empty")
+            print(f"Playlist {self.playlistname} is Empty")
             return False
 
         current = self.head
         while current is not None:
-            if current.music == music:
+            if current.music.Id == track_id:
                 break
             current = current.next
         #When the item is not found
         if current is None:
-            print("Item Not Found")
+            print(f"Track ID {track_id} not found in {self.playlistname}.")
             return False
         #To shift the current playing music node if the music is to be removed
         if self.current == current:
@@ -61,12 +62,12 @@ class Playlist:
         current.prev = None
 
         self.size -= 1
-        print("Music Deleted from Playlist")
+        print(f"Removed Track ID {track_id} from {self.playlistname}")
         return True
 
-    def display_playlist(self):
+    def display_playlist_tracks(self):
         if self.head is None:
-            print("Playlist is Empty")
+            print(f"Playlist {self.name} is Empty")
             return
         current = self.head
         position = 1
@@ -76,7 +77,7 @@ class Playlist:
                 f"{current.music.Title} - "
                 f"{current.music.Artist} - "
                 f"{current.music.Genre} - "
-                f"{current.music.Duration} "               
+                f"{current.music.Id} "               
             )
             position += 1
             current = current.next
@@ -93,28 +94,22 @@ class Playlist:
             current = current.next
         return search_result
 
-    def change_position(self, music, after):
-        if self.head is None:
-            print("Playlist is Empty")
+    def change_position(self, track_id, after_track_id):
+        if self.head is None or self.size < 2:
+            print("Not enough tracks to reorder")
             return False
         music_node = self.head
         while music_node is not None:
-            if music_node.music == music:
+            if music_node.music == track_id:
                 break
             music_node = music_node.next
-        if music_node is None:
-            print("Music Not Found")
-            return False
         after_node = self.head
         while after_node is not None:
-            if after_node.music == after:
+            if after_node.music == after_track_id:
                 break
             after_node = after_node.next
-        if after_node is None:
-            print("Taget music not found")
-            return False
-        if after_node == music_node:
-            print("Music is alreaddy at target position")
+        if not music_node or not after_node or music_node==after_node:
+            print("Invalid Target Positions")
             return False
         #Disconnect Head
         if music_node.prev is None:
@@ -135,7 +130,7 @@ class Playlist:
         else:
             self.tail = music_node
         after_node.next = music_node
-        print("Music position changed")
+        print("Music Track order Updated")
         return True
 
     def count(self):
@@ -143,11 +138,20 @@ class Playlist:
 
     def clear(self):
         if self.head is None:
-            print("Playlist is Empty")
+            print(f"Playlist {self.playlistname} is Empty")
             return False
         self.head = None
         self.tail = None
         self.current = None
         self.size = 0
-        print("Playlist Cleared")
-        return True    
+        print(f"Playlist {self.playlistname} Cleared")
+        return True
+
+    #Helper to extract track IDs sequentially for saving to JSON
+    def get_track_ids(self):
+        ids = []
+        current = self.head
+        while current is not None:
+            ids.append(current.music.Id)
+            current = current.next
+        return ids
