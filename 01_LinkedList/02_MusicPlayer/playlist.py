@@ -67,7 +67,7 @@ class Playlist:
 
     def display_playlist_tracks(self):
         if self.head is None:
-            print(f"Playlist {self.name} is Empty")
+            print(f"Playlist {self.playlistname} is Empty")
             return
         current = self.head
         position = 1
@@ -82,7 +82,7 @@ class Playlist:
             position += 1
             current = current.next
 
-    def search(self, search):
+    def search_inside_playlist(self, search):
         if self.head is None:
             return []
         current = self.head
@@ -100,12 +100,12 @@ class Playlist:
             return False
         music_node = self.head
         while music_node is not None:
-            if music_node.music == track_id:
+            if music_node.music.Id == track_id:
                 break
             music_node = music_node.next
         after_node = self.head
         while after_node is not None:
-            if after_node.music == after_track_id:
+            if after_node.music.Id == after_track_id:
                 break
             after_node = after_node.next
         if not music_node or not after_node or music_node==after_node:

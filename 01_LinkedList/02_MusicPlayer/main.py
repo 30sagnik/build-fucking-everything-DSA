@@ -1,161 +1,131 @@
-from music import Music
-from playlist import Playlist
+from library import Library
+from playlist_manager import PlaylistManager
 
-playlist = Playlist()
+def manage_playlist_menu(playlist, pm: PlaylistManager):
+    """Sub-menu that runs operations inside the selected playlist"""
+    while True:
+        print("\n==========================================")
+        print(f"SELECTED PLAYLIST: {playlist.playlistname}")
+        print("="*42)
+        print("1. Display Playlist")
+        print("2. Add Music to Playlist")
+        print("3. Remove Music from Playlist")
+        print("4. Change Track Position")
+        print("5. Search Music in Playlist")
+        print("6. Clear Playlist")
+        print("7. Back to Main Menu")
 
-music1 = Music(
-    1,
-    "Arz Kiya Hai",
-    "Anuv Jain",
-    "After Hours",
-    "3:20",
-    "music/song1.mp3"
-)
+        choice = input("\nEnter choice (1-7): ").strip()
 
-music2 = Music(
-    2,
-    "Raabta",
-    "Arijit Singh",
-    "Divide",
-    "4:23",
-    "music/song2.mp3"
-)
+        if choice == "1":
+            playlist.display_playlist_tracks()
 
-music3 = Music(
-    3,
-    "Itni Si Baat Hain",
-    "Armaan Malik",
-    "Divide",
-    "4:23",
-    "music/song3.mp3"
-)
+        elif choice == "2":
+            try:
+                track_id = int(input("Enter Track ID from library to add: "))
 
-music4 = Music(
-    4,
-    "Husn",
-    "Anuv Jain",
-    "Husn",
-    "3:37",
-    "music/song4.mp3"
-)
+                pm.add_track_to_playlist(playlist.playlistname, track_id)
+            except ValueError:
+                print("Invalid Input. Track ID must be an integer")
 
-music5 = Music(
-    5,
-    "Tum Se Hi",
-    "Mohit Chauhan",
-    "Jab We Met",
-    "5:21",
-    "music/song5.mp3"
-)
+        elif choice == "3":
+            try:
+                track_id = int(input("Enter Track ID from playlist to remove: "))
 
-music6 = Music(
-    6,
-    "Agar Tum Saath Ho",
-    "Alka Yagnik, Arijit Singh",
-    "Tamasha",
-    "5:41",
-    "music/song6.mp3"
-)
+                pm.remove_track_from_playist(playlist.playlistname, track_id)
+            except ValueError:
+                print("Invalid Input. Track ID must be an integer")
 
-music7 = Music(
-    7,
-    "Chaleya",
-    "Arijit Singh, Shilpa Rao",
-    "Jawan",
-    "3:20",
-    "music/song7.mp3"
-)
+        elif choice == "4":
+            try:
+                track_id = int(input("Enter Track ID to move: "))
+                after_id = int(input("Enter target Track ID to place it after: "))
 
-music8 = Music(
-    8,
-    "Apna Bana Le",
-    "Arijit Singh",
-    "Bhediya",
-    "4:21",
-    "music/song8.mp3"
-)
+                pm.change_track_postion(playlist.playlistname, track_id, after_id)
+            except ValueError:
+                print("Invalid Input. Track IDs must be an integer")
 
-music9 = Music(
-    9,
-    "Kesariya",
-    "Arijit Singh",
-    "Brahmāstra",
-    "4:28",
-    "music/song9.mp3"
-)
+        elif choice == "5":
+            query = input("Search (Title or Artist): ")
+            results = playlist.search_inside_playlist(query)
+            if not results:
+                print(f"No tracks found matching {query}")
+            else:
+                print(f"\n-----Search Results for {query}-----")
+                print(
+                    f"{'Title':<20}"
+                    f"{'Artist':<20}"
+                    f"{'Genre':<15}"
+                    f"{'ID':<7}"
+                )
+                for node in results:
+                    t = node.music
+                    print(
+                        f"{t.Title:<20}"
+                        f"{t.Artist:<20}"
+                        f"{t.Genre:<15}"
+                        f"{t.Id:<7}"
+                    )
 
-music10 = Music(
-    10,
-    "Heeriye",
-    "Jasleen Royal, Arijit Singh",
-    "Heeriye",
-    "3:14",
-    "music/song10.mp3"
-)
+        elif choice == "6":
+            confirm = input(f"Are you sure you want to clear '{playlist.playlistname}'? (y/n): ")
+            if confirm.lower() == "y":
+                pm.clear_playlist(playlist.playlistname)
 
-music11 = Music(
-    11,
-    "Maan Meri Jaan",
-    "King",
-    "Champagne Talk",
-    "4:24",
-    "music/song11.mp3"
-)
+        elif choice == "7":
+            print(f"Exiting playlist '{playlist.playlistname}' ")
+            break
+        else:
+            print("Invalid choice. Please try again. ")
 
-music12 = Music(
-    12,
-    "Satranga",
-    "Arijit Singh",
-    "Animal",
-    "4:31",
-    "music/song12.mp3"
-)
+def main():
+    library = Library()
+    pm = PlaylistManager(library)
 
-music13 = Music(
-    13,
-    "O Maahi",
-    "Arijit Singh",
-    "Dunki",
-    "3:53",
-    "music/song13.mp3"
-)
+    while True:
+        print("\n==========================================")
+        print("         MUSIC PLAYLIST MANAGER           ")
+        print("="*42)
+        print("1. Create Playlist")
+        print("2. Select/Open Playlist")
+        print("3. Rename Playlist")
+        print("4. Delete Playlist")
+        print("5. List All Playlists")
+        print("6. Exit")
 
-music14 = Music(
-    14,
-    "Iktara",
-    "Kavita Seth",
-    "Wake Up Sid",
-    "4:13",
-    "music/song14.mp3"
-)
+        choice = input("\nEnter choice (1-6): ").strip()
 
-music15 = Music(
-    15,
-    "Kho Gaye Hum Kahan",
-    "Jasleen Royal, Prateek Kuhad",
-    "Kho Gaye Hum Kahan",
-    "3:39",
-    "music/song15.mp3"
-)
-#Add music to playlist
-playlist.add_music(music1)
-playlist.add_music(music2)
-playlist.add_music(music3)
-playlist.add_music(music4)
-playlist.add_music(music5)
+        if choice == "1":
+            name = input("Enter new Playlist name: ")
+            pm.create_playlist(name)
 
-#Display Playlist
-total = playlist.count()
-print(f"{total} Music Tracks")
-playlist.display_playlist()
+        elif choice == "2":
+            pm.list_playlists()
+            name = input("\nEnter playlist name to open: ")
+            #Get the playlist using get function of playlistmanager
+            selected_playlist = pm.get_playlist(name)
+            if selected_playlist:
+                manage_playlist_menu(selected_playlist, pm)
 
-#Remove song from playlist
-playlist.remove_music(music4)
+        elif choice == "3":
+            old_name = input("Enter Playlist name to rename: ")
+            new_name = input("Enter new Playlist name: ")
+            pm.rename_playlist(old_name, new_name)
 
-#Move song inside playlist
+        elif choice == "4":
+            name = input("Enter Playlist name to delete: ")
+            pm.delete_playlist(name)
 
-playlist.change_position(music5, music1)
+        elif choice == "5":
+            pm.list_playlists()
 
-playlist.display_playlist()
+        elif choice == "6":
+            print("GoodBye!")
+            break
+
+        else:
+            print("Invalid Input. Please Enter 1-6")
 
 
+if __name__ == "__main__":
+    main()

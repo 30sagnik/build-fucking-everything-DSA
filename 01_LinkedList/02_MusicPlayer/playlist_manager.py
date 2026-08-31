@@ -29,7 +29,7 @@ class PlaylistManager:
             print(f"A playlist already exits with this name {new_name}")
             return False
         pl = self.playlists.pop(old_name) #This removes the old_name and attaches the values assigned to it to pl
-        pl.name = new_name #This updates the internal name attribute of Playlist object to new_name
+        pl.playlistname = new_name #This updates the internal name attribute of Playlist object to new_name
         self.playlists[new_name] = pl #This creates a new entry in self.playlists using new_name as the key
         self.save_playlists()
         print(f"Playlist renamed from {old_name} to {new_name}")
@@ -58,8 +58,15 @@ class PlaylistManager:
             print("No Playlists available")
             return
         print("\n====== Available Playlists ======")
-        for name in self.playlists:
-            print(f"-- {name}")
+        print(
+            f"{'Playlist Name':<20}"
+            f"{'Tracks':<5}"
+        )
+        for name, playlist in self.playlists.items():
+            print(
+                f"{name:<20}"
+                f"{playlist.count():<5}"
+            )
 
     #-----Bridged Actions(Executes Playlist Actions)------
 
@@ -125,7 +132,7 @@ class PlaylistManager:
                 for tid in track_ids: #To loop through all track_ids in the saved playlist
                     music = self.library.get_track(int(tid))
                     if music:
-                        pl.add(music)
+                        pl.add_music(music)
                 self.playlists[name] = pl
         except FileNotFoundError:
             print("No existing 'playlists.json' found, Initializing Empty playlist manager")
