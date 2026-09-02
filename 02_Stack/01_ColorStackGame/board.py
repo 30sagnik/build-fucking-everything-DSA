@@ -1,7 +1,9 @@
 import random
 from stack import Stack
 class Board:
-    def __init__(self, num_stacks, stack_capacity, colors):
+    def __init__(self, num_stacks = 6, stack_capacity = 6, colors = None):
+        if colors is None:
+            colors = ["R", "G", "B", "Y"]
         self.num_stacks = num_stacks
         self.stack_capacity = stack_capacity
         self.colors = colors
@@ -31,10 +33,11 @@ class Board:
 
     def generate_rings(self):
         rings = []
-        for ring in self.colors:
-            for _ in range(self.stack_capacity):
-                rings.append(ring)
-                random.shuffle(rings)
+        for color in self.colors:
+            # for _ in range(self.stack_capacity):
+            #     rings.append(ring)
+            rings.extend([color] * self.stack_capacity)
+        random.shuffle(rings)
         return rings
 
     def generate_random_board(self):
@@ -48,28 +51,39 @@ class Board:
 
     def display_board(self):
         print("\nCurrent Board State:")
-        for i, j in enumerate(self.stacks):
-            print(f"{i+1}: {j.stack}")
+        for i, bar in enumerate(self.stacks):
+            items = bar.get_items()
+            display_str = " ".join(items) if items else "__"
+            print(f"Bar {i}: [ {display_str} ]")
 
     
     def check_win(self):
+        completed_stacks = 0
         for bar in self.stacks:
-            organized = 0
-            if not bar.is_empty():
-                first_color = bar.peek()
-                fill = 0
-                for ring in bar.stack:
-                    if ring == first_color:
-                        fill +=1
-                if fill == self.stack_capacity:
-                    organized +=1
+            if bar.is_empty():
+                continue
+            elif bar.is_homogenous():
+                completed_stacks += 1
+            else:
+                return False
+        return completed_stacks == len(self.colors)
 
-        if organized == len(self.colors):
-            return True
-        return False
-
-board = Board(6, 6, ["R", "G", "B", "Y"])
-board.generate_random_board()
-print(board.display_board())
-print(f"Win status: {board.check_win()}")
+if __name__ == "__main__": #--QUICK TESTING
+    board = Board(6, 6, ["R", "G", "B", "Y"])
+    board.generate_random_board()
+    board.display_board()
+    board.move_ring(0, 1)
+    board.display_board()
+    board.move_ring(1, 2)
+    board.display_board()
+    board.move_ring(2, 3)
+    board.move_ring(2, 3)
+    board.move_ring(2, 4)
+    board.move_ring(2, 4)
+    board.move_ring(2, 5)
+    board.move_ring(2, 5)
+    board.move_ring(2, 1)
+    board.move_ring(2, 1)
+    board.display_board()
+    print(f"Win status: {board.check_win()}")
 

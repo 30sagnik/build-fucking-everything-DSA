@@ -6,7 +6,6 @@ class Stack:
     
     def push(self, color):
         if self.is_full():
-            print("Stack is full")
             return False
         self.top += 1
         self.stack[self.top] = color
@@ -14,7 +13,6 @@ class Stack:
 
     def pop(self):
         if self.is_empty():
-            print("Stack is empty. Cannot pop.")
             return None
         popped_color = self.stack[self.top]
         self.stack[self.top] = None
@@ -23,7 +21,6 @@ class Stack:
 
     def peek(self):
         if self.is_empty():
-            print("Stack is empty")
             return None
         return self.stack[self.top]
 
@@ -35,6 +32,22 @@ class Stack:
 
     def size(self):
         return self.top + 1
+
+    def get_items(self):
+        items = []
+        for i in range(self.top + 1):
+            items.append(self.stack[i])
+        return items
+
+    def is_homogenous(self):
+        """Returns true if stack is full and contains only 1 distinct color"""
+        if not self.is_full():
+            return False
+        first_color = self.peek()
+        for i in self.stack:
+            if i != first_color:
+                return False
+        return True
 
 stack1 = Stack(5)
 stack1.push("R")
