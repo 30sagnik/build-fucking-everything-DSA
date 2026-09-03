@@ -14,6 +14,9 @@ class Board:
 
     #Move the color/ring from one stack to another
     def move_ring(self, source_stack_index, target_stack_index):
+        if source_stack_index == target_stack_index:
+            print("Source and Target Bar indices are same. Choose Different Bars")
+            return False
         if source_stack_index < 0 or source_stack_index >= len(self.stacks):
             print("Invalid source stack index")
             return False
@@ -31,6 +34,7 @@ class Board:
         target_stack.push(source_stack.pop())
         return True
 
+    #Generate a list of rings based on the colors and stack capacity
     def generate_rings(self):
         rings = []
         for color in self.colors:
@@ -40,6 +44,7 @@ class Board:
         random.shuffle(rings)
         return rings
 
+    #Generate a random board by distributing the rings across the stacks
     def generate_random_board(self):
         rings = self.generate_rings()
         for ring in rings:
@@ -49,14 +54,25 @@ class Board:
                     self.stacks[stack_index].push(ring)
                     break
 
+    #Display the current state of the board
     def display_board(self):
-        print("\nCurrent Board State:")
-        for i, bar in enumerate(self.stacks):
-            items = bar.get_items()
-            display_str = " ".join(items) if items else "__"
-            print(f"Bar {i}: [ {display_str} ]")
+        print("\n========Current Board State========")
+        for level in range(self.stack_capacity, 0, -1):
+            row=""
+            for bar in self.stacks:
+                items = bar.get_items()
+                if level <= len(items):
+                    row += f"| {items[level - 1]} | "
+                else:
+                    row += "|   | "
+            print(row)
+        print("----- "*len(self.stacks))
+        labels = []
+        for i in range(len(self.stacks)):
+            labels.append(f"Bar{i+1} ".center(6))
+        print(" "+"".join(labels))
 
-    
+    #Check if the game is won by verifying if all stacks are either empty or homogenous
     def check_win(self):
         completed_stacks = 0
         for bar in self.stacks:

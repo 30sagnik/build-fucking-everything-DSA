@@ -43,18 +43,20 @@ class Stack:
         """Returns true if stack is full and contains only 1 distinct color"""
         if not self.is_full():
             return False
+        #Executes only if stack is full
         first_color = self.peek()
-        for i in self.stack:
-            if i != first_color:
+        for i in range(self.top + 1):
+            if self.stack[i] != first_color:
                 return False
         return True
 
-stack1 = Stack(5)
-stack1.push("R")
-stack1.push("G")
-print(stack1.stack)
-stack1.pop()
-print(stack1.is_empty())
-print(stack1.peek())
-print(stack1.size())
-print(stack1.is_full())
+if __name__ == "__main__": #QUICK TESTING
+    stack1 = Stack(5)
+    stack1.push("R")
+    stack1.push("G")
+    print(stack1.stack)
+    stack1.pop()
+    print(stack1.is_empty())
+    print(stack1.peek())
+    print(stack1.size())
+    print(stack1.is_full())
